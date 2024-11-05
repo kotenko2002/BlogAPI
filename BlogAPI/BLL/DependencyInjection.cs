@@ -1,12 +1,22 @@
-﻿namespace BlogAPI.BLL
+﻿using BlogAPI.BLL.Services.Auth;
+using BlogAPI.BLL.Services.Posts;
+
+namespace BlogAPI.BLL
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddBusinessLogicLayer(this IServiceCollection services)
+        public static IServiceCollection AddBusinessLogicLayer(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddExampleService();
+            return services
+                .AddAuthService(configuration)
+                .AddScoped<IPostService, PostService>();
+        }
 
-            return services;
+        public static IServiceCollection AddAuthService(this IServiceCollection services, IConfiguration configuration)
+        {
+            return services
+                .AddScoped<IAuthService, AuthService>()
+                .Configure<JwtConfig>(configuration.GetSection("Jwt"));
         }
     }
 }

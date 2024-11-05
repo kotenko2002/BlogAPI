@@ -12,8 +12,8 @@ namespace BlogAPI
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services
-                .AddPresentationLayer()
-                .AddBusinessLogicLayer()
+                .AddPresentationLayer(builder.Configuration)
+                .AddBusinessLogicLayer(builder.Configuration)
                 .AddDataAccessLayer(builder.Configuration);
 
             var app = builder.Build();
@@ -25,7 +25,8 @@ namespace BlogAPI
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("AllowSpecificOrigin");
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
