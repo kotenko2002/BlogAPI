@@ -62,7 +62,6 @@ namespace BlogAPI.BLL.Services.Auth
             var authClaims = new List<Claim>
             {
                 new Claim("userId", user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
             authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));

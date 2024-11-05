@@ -1,6 +1,7 @@
 ﻿using BlogAPI.DAL.Common;
 using BlogAPI.DAL.Entities.Posts;
 using BlogAPI.DAL.Repositories.BaseRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogAPI.DAL.Repositories.Posts
 {
@@ -8,6 +9,13 @@ namespace BlogAPI.DAL.Repositories.Posts
     {
         public PostRepository(ApplicationDbContext context) : base(context)
         {
+        }
+
+        public async Task<List<Post>> GetPostsByAuthorIdAsync(int authorId)
+        {
+            return await Sourse
+                .Where(post => post.AuthorId == authorId)
+                .ToListAsync();
         }
     }
 }
