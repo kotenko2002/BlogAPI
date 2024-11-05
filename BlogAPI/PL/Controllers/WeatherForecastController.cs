@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlogAPI.Controllers
+namespace BlogAPI.PL.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -29,5 +29,16 @@ namespace BlogAPI.Controllers
             })
             .ToArray();
         }
+    }
+
+    public class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public string? Summary { get; set; }
     }
 }
