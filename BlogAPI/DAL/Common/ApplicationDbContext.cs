@@ -1,6 +1,7 @@
 ﻿using BlogAPI.DAL.Entities.Categories;
 using BlogAPI.DAL.Entities.Hashtags;
 using BlogAPI.DAL.Entities.Posts;
+using BlogAPI.DAL.Entities.PostsHashtags;
 using BlogAPI.DAL.Entities.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,9 +12,9 @@ namespace BlogAPI.DAL.Common
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public DbSet<Post> Posts { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Hashtag> Hashtags { get; set; }
         public DbSet<PostHashtag> PostsHashtags { get; set; }
+        public DbSet<Hashtag> Hashtags { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

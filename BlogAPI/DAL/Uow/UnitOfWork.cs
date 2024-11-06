@@ -1,5 +1,8 @@
 ﻿using BlogAPI.DAL.Common;
+using BlogAPI.DAL.Repositories.Categories;
+using BlogAPI.DAL.Repositories.Hashtags;
 using BlogAPI.DAL.Repositories.Posts;
+using BlogAPI.DAL.Repositories.PostsHashtags;
 
 namespace BlogAPI.DAL.Uow
 {
@@ -8,12 +11,18 @@ namespace BlogAPI.DAL.Uow
         private readonly ApplicationDbContext _context;
 
         public IPostRepository PostRepository { get; }
+        public IPostHashtagRepository PostHashtagRepository { get; }
+        public IHashtagRepository HashtagRepository { get; }
+        public ICategoryRepository CategoryRepository { get; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
 
             PostRepository = new PostRepository(_context);
+            PostHashtagRepository = new PostHashtagRepository(_context);
+            HashtagRepository = new HashtagRepository(_context);
+            CategoryRepository = new CategoryRepository(_context);
         }
 
         public async Task CompleteAsync()

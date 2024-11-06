@@ -15,6 +15,9 @@ namespace BlogAPI.DAL.Repositories.Posts
         {
             return await Sourse
                 .Include(p => p.Author)
+                .Include(p => p.Category)
+                .Include(p => p.PostHashtags)
+                    .ThenInclude(ph => ph.Hashtag)
                 .Where(p => p.AuthorId == authorId)
                 .ToListAsync();
         }

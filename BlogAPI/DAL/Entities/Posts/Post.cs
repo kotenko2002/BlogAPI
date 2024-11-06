@@ -1,5 +1,5 @@
 ﻿using BlogAPI.DAL.Entities.Categories;
-using BlogAPI.DAL.Entities.Hashtags;
+using BlogAPI.DAL.Entities.PostsHashtags;
 using BlogAPI.DAL.Entities.Users;
 
 namespace BlogAPI.DAL.Entities.Posts

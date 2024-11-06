@@ -9,5 +9,10 @@ namespace BlogAPI.PL.Models.Posts
 
         [Required(ErrorMessage = "Опис є обов'язковим")]
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Категорія є обов'язковою")]
+        public int CategoryId { get; set; }
+
+        public List<int> HashtagIds { get; set; }
     }
 }

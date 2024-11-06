@@ -1,4 +1,6 @@
 ﻿using BlogAPI.BLL.Services.Auth;
+using BlogAPI.BLL.Services.Categories;
+using BlogAPI.BLL.Services.Hashtags;
 using BlogAPI.BLL.Services.Posts;
 
 namespace BlogAPI.BLL
@@ -9,7 +11,9 @@ namespace BlogAPI.BLL
         {
             return services
                 .AddAuthService(configuration)
-                .AddScoped<IPostService, PostService>();
+                .AddScoped<IPostService, PostService>()
+                .AddScoped<ICategoryService, CategoryService>()
+                .AddScoped<IHashtagService, HashtagService>();
         }
 
         public static IServiceCollection AddAuthService(this IServiceCollection services, IConfiguration configuration)

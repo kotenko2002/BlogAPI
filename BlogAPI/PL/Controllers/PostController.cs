@@ -1,10 +1,12 @@
 ﻿using BlogAPI.BLL.Services.Posts;
 using BlogAPI.DAL.Entities.Posts;
 using BlogAPI.PL.Common.Extensions;
+using BlogAPI.PL.Models.Categories;
+using BlogAPI.PL.Models.Hashtags;
 using BlogAPI.PL.Models.Posts;
+using BlogAPI.PL.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace BlogAPI.PL.Controllers
 {
@@ -36,11 +38,20 @@ namespace BlogAPI.PL.Controllers
                     p.Author.Id,
                     p.Author.FirstName,
                     p.Author.LastName
-                )
+                ),
+                new CategoryResponse(
+                    p.Category.Id,
+                    p.Category.Name,
+                    p.Category.Description
+                ),
+                p.PostHashtags.Select(ph => new HashtagResponse(
+                    ph.Hashtag.Id,
+                    ph.Hashtag.Name
+                )).ToList()
             )));
         }
 
-        [HttpPost("posts"), Authorize]
+        [HttpPost("posts"), Authorize] //TODO: додати хештеги 
         public async Task<IActionResult> CreatePost(CreatePostRequest request)
         {
             int userId = _httpContextAccessor.HttpContext.User.GetUserId();
@@ -64,7 +75,16 @@ namespace BlogAPI.PL.Controllers
                     p.Author.Id,
                     p.Author.FirstName,
                     p.Author.LastName
-                )
+                ),
+                new CategoryResponse(
+                    p.Category.Id,
+                    p.Category.Name,
+                    p.Category.Description
+                ),
+                p.PostHashtags.Select(ph => new HashtagResponse(
+                    ph.Hashtag.Id,
+                    ph.Hashtag.Name
+                )).ToList()
             )));
         }
     }

@@ -1,4 +1,5 @@
 ﻿using BlogAPI.DAL.Entities.Posts;
+using BlogAPI.DAL.Entities.PostsHashtags;
 using BlogAPI.DAL.Uow;
 using BlogAPI.PL.Models.Posts;
 
@@ -19,10 +20,18 @@ namespace BlogAPI.BLL.Services.Posts
             {
                 Title = request.Title,
                 Description = request.Description,
-                AuthorId = authorId
+                AuthorId = authorId,
+                CategoryId = request.CategoryId
             };
-
             await _uow.PostRepository.AddAsync(newPost);
+
+            var newPostsHashtags = request.HashtagIds.Select(hashtagId => new PostHashtag()
+            {
+                Post = newPost,
+                HashtagId = hashtagId
+            });
+            await _uow.PostHashtagRepository.AddRangeAsync(newPostsHashtags);
+
             await _uow.CompleteAsync();
         }
 

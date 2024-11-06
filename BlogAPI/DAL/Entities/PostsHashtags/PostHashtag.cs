@@ -1,6 +1,7 @@
-﻿using BlogAPI.DAL.Entities.Posts;
+﻿using BlogAPI.DAL.Entities.Hashtags;
+using BlogAPI.DAL.Entities.Posts;
 
-namespace BlogAPI.DAL.Entities.Hashtags
+namespace BlogAPI.DAL.Entities.PostsHashtags
 {
     public class PostHashtag
     {
