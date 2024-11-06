@@ -4,6 +4,7 @@ using BlogAPI.PL.Common.Extensions;
 using BlogAPI.PL.Models.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace BlogAPI.PL.Controllers
 {
@@ -22,20 +23,21 @@ namespace BlogAPI.PL.Controllers
             _postService = postService;
         }
 
-        // Приклад
-        [HttpGet("public"), AllowAnonymous]
-        public IActionResult Public()
+        [HttpGet("posts/{authorId}"), AllowAnonymous]
+        public async Task<IActionResult> GetPostsByAuthorId(int authorId)
         {
-            return Ok();
-        }
+            List<Post> posts = await _postService.GetPostsByAuthorIdAsync(authorId);
 
-        // Приклад
-        [HttpGet("private"), Authorize]
-        public IActionResult Private()
-        {
-            int userId = _httpContextAccessor.HttpContext.User.GetUserId();
-
-            return Ok($"Привіт, користувач з Id: {userId}");
+            return Ok(posts.Select(p => new PostResponse(
+                p.Id,
+                p.Title,
+                p.Description,
+                new UserResponse(
+                    p.Author.Id,
+                    p.Author.FirstName,
+                    p.Author.LastName
+                )
+            )));
         }
 
         [HttpPost("posts"), Authorize]
@@ -47,12 +49,23 @@ namespace BlogAPI.PL.Controllers
             return Ok($"Пост успішно створено");
         }
 
-        [HttpGet("posts"), Authorize]
-        public async Task<IActionResult> GetPostsByAuthorId(int authorId)
-        {
-            List<Post> posts = await _postService.GetPostsByAuthorIdAsync(authorId);
 
-            return Ok(posts);
+        [HttpGet("posts/mine"), Authorize]
+        public async Task<IActionResult> GetMyPosts()
+        {
+            int userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            List<Post> posts = await _postService.GetPostsByAuthorIdAsync(userId);
+
+            return Ok(posts.Select(p => new PostResponse(
+                p.Id,
+                p.Title,
+                p.Description,
+                new UserResponse(
+                    p.Author.Id,
+                    p.Author.FirstName,
+                    p.Author.LastName
+                )
+            )));
         }
     }
 }

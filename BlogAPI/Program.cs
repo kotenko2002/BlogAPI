@@ -16,6 +16,9 @@ namespace BlogAPI
                 .AddBusinessLogicLayer(builder.Configuration)
                 .AddDataAccessLayer(builder.Configuration);
 
+            builder.Services
+                .AddAuthScheme(builder.Configuration);
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())

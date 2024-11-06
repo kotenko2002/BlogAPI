@@ -33,6 +33,8 @@ namespace BlogAPI.BLL.Services.Auth
 
             var user = new User()
             {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 UserName = request.Username,
                 Email = request.Email,
                 PhoneNumber = request.Phone,

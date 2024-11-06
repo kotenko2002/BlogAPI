@@ -14,7 +14,8 @@ namespace BlogAPI.DAL.Repositories.Posts
         public async Task<List<Post>> GetPostsByAuthorIdAsync(int authorId)
         {
             return await Sourse
-                .Where(post => post.AuthorId == authorId)
+                .Include(p => p.Author)
+                .Where(p => p.AuthorId == authorId)
                 .ToListAsync();
         }
     }

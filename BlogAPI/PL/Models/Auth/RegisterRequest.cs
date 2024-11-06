@@ -4,6 +4,12 @@ namespace BlogAPI.PL.Models.Auth
 {
     public class RegisterRequest
     {
+        [Required(ErrorMessage = "Ім'я є обов'язковим")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Прізвище є обов'язковим")]
+        public string LastName { get; set; }
+
         [Required(ErrorMessage = "Ім'я користувача є обов'язковим")]
         public string Username { get; set; }
 
@@ -15,6 +21,5 @@ namespace BlogAPI.PL.Models.Auth
 
         [Required(ErrorMessage = "Пароль є обов'язковим")]
         public string Password { get; set; }
-
     }
 }

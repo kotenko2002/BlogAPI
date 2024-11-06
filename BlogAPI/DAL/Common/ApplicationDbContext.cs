@@ -16,6 +16,12 @@ namespace BlogAPI.DAL.Common
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>(builder =>
+            {
+                builder.Property(u => u.FirstName).IsRequired();
+                builder.Property(u => u.LastName).IsRequired();
+            });
+
             modelBuilder.Entity<Post>(builder =>
             {
                 builder
