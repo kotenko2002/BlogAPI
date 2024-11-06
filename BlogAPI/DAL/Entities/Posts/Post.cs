@@ -1,4 +1,6 @@
-﻿using BlogAPI.DAL.Entities.Users;
+﻿using BlogAPI.DAL.Entities.Categories;
+using BlogAPI.DAL.Entities.Hashtags;
+using BlogAPI.DAL.Entities.Users;
 
 namespace BlogAPI.DAL.Entities.Posts
 {
@@ -10,5 +12,10 @@ namespace BlogAPI.DAL.Entities.Posts
 
         public int AuthorId { get; set; }
         public virtual User Author { get; set; }
+
+        public int CategoryId { get; set; }
+        public virtual Category Category { get; set; }
+
+        public ICollection<PostHashtag> PostHashtags { get; set; }
     }
 }
