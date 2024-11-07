@@ -45,6 +45,7 @@ namespace BlogAPI.PL.Controllers
         [HttpPost("posts"), Authorize]
         public async Task<IActionResult> CreatePost(CreatePostRequest request)
         {
+            //TODO: add photos support
             int userId = _httpContextAccessor.HttpContext.User.GetUserId();
             await _postService.AddPostAsync(request, userId);
 
@@ -54,8 +55,10 @@ namespace BlogAPI.PL.Controllers
         [HttpPut("posts"), Authorize]
         public async Task<IActionResult> UpdatePost(UpdatePostRequest request)
         {
-            int userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            await _postService.UpdatePostAsync(request, userId);
+            //TODO: reimplement
+
+            //int userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            //await _postService.UpdatePostAsync(request, userId);
 
             return Ok($"Пост успішно оновлено");
         }
@@ -67,6 +70,13 @@ namespace BlogAPI.PL.Controllers
             List<Post> posts = await _postService.GetPostsByAuthorIdAsync(userId);
 
             return Ok(ConvertPostsToResponseDto(posts));
+        }
+
+        [HttpDelete("posts/{postId}"), Authorize]
+        public async Task<IActionResult> DeletePost(int postId)
+        {
+            // TODO: implement
+            return Ok("Пост успішно видалено");
         }
 
         private List<PostResponse> ConvertPostsToResponseDto(List<Post> posts)
