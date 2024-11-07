@@ -1,4 +1,5 @@
 ﻿using BlogAPI.DAL.Repositories.Categories;
+using BlogAPI.DAL.Repositories.Comments;
 using BlogAPI.DAL.Repositories.Hashtags;
 using BlogAPI.DAL.Repositories.Posts;
 using BlogAPI.DAL.Repositories.PostsHashtags;
@@ -11,6 +12,7 @@ namespace BlogAPI.DAL.Uow
         IPostHashtagRepository PostHashtagRepository { get; }
         IHashtagRepository HashtagRepository { get; }
         ICategoryRepository CategoryRepository { get; }
+        ICommentRepository CommentRepository { get; }
 
         Task CompleteAsync();
     }

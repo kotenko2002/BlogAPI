@@ -7,7 +7,7 @@ namespace BlogAPI.DAL.Entities.Comments
     {
         public int Id { get; set; }
         public string Content { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public int AuthorId { get; set; }
         public virtual User Author { get; set; }
@@ -19,5 +19,4 @@ namespace BlogAPI.DAL.Entities.Comments
         public virtual Comment ParentComment { get; set; }
         public virtual ICollection<Comment> Replies { get; set; }
     }
-
 }

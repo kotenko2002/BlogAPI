@@ -21,8 +21,7 @@ namespace BlogAPI.BLL.Services.Posts
                 Title = request.Title,
                 Description = request.Description,
                 AuthorId = authorId,
-                CategoryId = request.CategoryId,
-                CreatedAt = DateTime.Now
+                CategoryId = request.CategoryId
             };
             await _uow.PostRepository.AddAsync(newPost);
 
@@ -45,7 +44,7 @@ namespace BlogAPI.BLL.Services.Posts
             Post post = await _uow.PostRepository.FindAsync(request.Id);
             if(post == null)
             {
-                throw new Exception($"Поста ідентифікатором {request.Id} не існує");
+                throw new Exception($"Поста з ідентифікатором {request.Id} не існує");
             }
 
             if(post.AuthorId != currentUserId)
