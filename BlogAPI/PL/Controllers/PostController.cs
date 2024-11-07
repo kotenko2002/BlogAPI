@@ -51,7 +51,7 @@ namespace BlogAPI.PL.Controllers
             )));
         }
 
-        [HttpPost("posts"), Authorize] //TODO: додати хештеги 
+        [HttpPost("posts"), Authorize]
         public async Task<IActionResult> CreatePost(CreatePostRequest request)
         {
             int userId = _httpContextAccessor.HttpContext.User.GetUserId();
@@ -60,6 +60,14 @@ namespace BlogAPI.PL.Controllers
             return Ok($"Пост успішно створено");
         }
 
+        [HttpPut("posts"), Authorize]
+        public async Task<IActionResult> UpdatePost(UpdatePostRequest request)
+        {
+            int userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            await _postService.UpdatePostAsync(request, userId);
+
+            return Ok($"Пост успішно оновлено");
+        }
 
         [HttpGet("posts/mine"), Authorize]
         public async Task<IActionResult> GetMyPosts()

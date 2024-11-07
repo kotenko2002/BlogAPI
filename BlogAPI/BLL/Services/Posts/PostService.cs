@@ -25,12 +25,38 @@ namespace BlogAPI.BLL.Services.Posts
             };
             await _uow.PostRepository.AddAsync(newPost);
 
-            var newPostsHashtags = request.HashtagIds.Select(hashtagId => new PostHashtag()
+            if(request.HashtagIds != null && request.HashtagIds.Any())
             {
-                Post = newPost,
-                HashtagId = hashtagId
-            });
-            await _uow.PostHashtagRepository.AddRangeAsync(newPostsHashtags);
+                List<PostHashtag> newPostsHashtags = request.HashtagIds.Select(hashtagId => new PostHashtag()
+                {
+                    Post = newPost,
+                    HashtagId = hashtagId
+                }).ToList();
+
+                await _uow.PostHashtagRepository.AddRangeAsync(newPostsHashtags);
+            }
+
+            await _uow.CompleteAsync();
+        }
+
+        public async Task UpdatePostAsync(UpdatePostRequest request, int currentUserId)
+        {
+            Post post = await _uow.PostRepository.FindAsync(request.Id);
+            if(post == null)
+            {
+                throw new Exception($"Поста ідентифікатором {request.Id} не існує");
+            }
+
+            if(post.AuthorId != currentUserId)
+            {
+                throw new Exception($"Ви не маєте права на редагування поста, оскільки не є автором");
+            }
+
+            post.Title = request.Title;
+            post.Description = request.Description;
+            post.CategoryId = request.CategoryId;
+
+            await UpdatePostHashtagsAsync(post, request.HashtagIds);
 
             await _uow.CompleteAsync();
         }
@@ -38,6 +64,32 @@ namespace BlogAPI.BLL.Services.Posts
         public async Task<List<Post>> GetPostsByAuthorIdAsync(int authorId)
         {
             return await _uow.PostRepository.GetPostsByAuthorIdAsync(authorId);
+        }
+
+        private async Task UpdatePostHashtagsAsync(Post post, List<int> hashtagIds)
+        {
+            hashtagIds = hashtagIds ?? new List<int>();
+            List<int> existingHashtagIds = post.PostHashtags.Select(ph => ph.HashtagId).ToList();
+
+            List<PostHashtag> tagsToRemove = post.PostHashtags
+                .Where(ph => !hashtagIds.Contains(ph.HashtagId)).ToList();
+            if (tagsToRemove.Any())
+            {
+                await _uow.PostHashtagRepository.RemoveRangeAsync(tagsToRemove);
+            }
+
+            List<int> tagsToAdd = hashtagIds
+                .Where(id => !existingHashtagIds.Contains(id)).ToList();
+            if (tagsToAdd.Any())
+            {
+                var newPostsHashtags = tagsToAdd.Select(tagId => new PostHashtag()
+                {
+                    PostId = post.Id,
+                    HashtagId = tagId
+                });
+
+                await _uow.PostHashtagRepository.AddRangeAsync(newPostsHashtags);
+            }
         }
     }
 }

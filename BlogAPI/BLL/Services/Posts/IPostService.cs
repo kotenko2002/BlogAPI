@@ -6,6 +6,7 @@ namespace BlogAPI.BLL.Services.Posts
     public interface IPostService
     {
         Task AddPostAsync(CreatePostRequest request, int authorId);
+        Task UpdatePostAsync(UpdatePostRequest request, int currentUserId);
         Task<List<Post>> GetPostsByAuthorIdAsync(int authorId);
     }
 }

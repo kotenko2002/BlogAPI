@@ -36,12 +36,12 @@ namespace BlogAPI.DAL.Repositories.BaseRepository
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync()
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync()
         {
             return await Sourse.ToListAsync();
         }
 
-        public async Task<TEntity> FindAsync(int id)
+        public virtual async Task<TEntity> FindAsync(int id)
         {
             return await Sourse.FindAsync(id);
         }

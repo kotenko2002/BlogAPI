@@ -11,6 +11,16 @@ namespace BlogAPI.DAL.Repositories.Posts
         {
         }
 
+        public override async Task<Post> FindAsync(int postId)
+        {
+            return await Sourse
+                .Include(p => p.Author)
+                .Include(p => p.Category)
+                .Include(p => p.PostHashtags)
+                    .ThenInclude(ph => ph.Hashtag)
+                .FirstOrDefaultAsync(p => p.Id == postId);
+        }
+
         public async Task<List<Post>> GetPostsByAuthorIdAsync(int authorId)
         {
             return await Sourse
