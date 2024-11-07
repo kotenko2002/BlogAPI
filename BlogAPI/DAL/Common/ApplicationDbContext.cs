@@ -1,4 +1,5 @@
 ﻿using BlogAPI.DAL.Entities.Categories;
+using BlogAPI.DAL.Entities.Comments;
 using BlogAPI.DAL.Entities.Hashtags;
 using BlogAPI.DAL.Entities.Posts;
 using BlogAPI.DAL.Entities.PostsHashtags;
@@ -15,6 +16,7 @@ namespace BlogAPI.DAL.Common
         public DbSet<PostHashtag> PostsHashtags { get; set; }
         public DbSet<Hashtag> Hashtags { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -30,9 +32,11 @@ namespace BlogAPI.DAL.Common
 
             modelBuilder.Entity<Post>(builder =>
             {
+                builder.Property(u => u.CreatedAt).IsRequired();
+
                 builder
                    .HasOne(u => u.Author)
-                   .WithMany(p => p.Posts)
+                   .WithMany()
                    .HasForeignKey(u => u.AuthorId);
 
                 builder
@@ -57,6 +61,26 @@ namespace BlogAPI.DAL.Common
                     .HasForeignKey(ph => ph.HashtagId);
             });
 
+            modelBuilder.Entity<Comment>(builder =>
+            {
+                builder
+                   .HasOne(c => c.Author)
+                   .WithMany()
+                   .HasForeignKey(c => c.AuthorId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+                builder
+                   .HasOne(c => c.Post)
+                   .WithMany(p => p.Comments)
+                   .HasForeignKey(c => c.PostId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+                builder
+                   .HasOne(c => c.ParentComment)
+                   .WithMany(c => c.Replies)
+                   .HasForeignKey(c => c.ParentCommentId)
+                   .OnDelete(DeleteBehavior.Restrict);
+            });
 
             base.OnModelCreating(modelBuilder);
         }

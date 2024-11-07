@@ -21,7 +21,8 @@ namespace BlogAPI.BLL.Services.Posts
                 Title = request.Title,
                 Description = request.Description,
                 AuthorId = authorId,
-                CategoryId = request.CategoryId
+                CategoryId = request.CategoryId,
+                CreatedAt = DateTime.Now
             };
             await _uow.PostRepository.AddAsync(newPost);
 
@@ -58,6 +59,7 @@ namespace BlogAPI.BLL.Services.Posts
 
             await UpdatePostHashtagsAsync(post, request.HashtagIds);
 
+            post.UpdatedAt = DateTime.Now;
             await _uow.CompleteAsync();
         }
 
