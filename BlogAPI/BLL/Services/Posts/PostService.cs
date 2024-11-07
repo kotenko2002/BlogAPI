@@ -67,6 +67,11 @@ namespace BlogAPI.BLL.Services.Posts
             return await _uow.PostRepository.GetPostsByAuthorIdAsync(authorId);
         }
 
+        public async Task<List<Post>> GetPostsByFilterAsync(PostFilterRequest request)
+        {
+            return await _uow.PostRepository.GetPostsByFilterAsync(request);
+        }
+
         private async Task UpdatePostHashtagsAsync(Post post, List<int> hashtagIds)
         {
             hashtagIds = hashtagIds ?? new List<int>();

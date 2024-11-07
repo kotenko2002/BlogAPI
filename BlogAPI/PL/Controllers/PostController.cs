@@ -25,30 +25,21 @@ namespace BlogAPI.PL.Controllers
             _postService = postService;
         }
 
+
+        [HttpPost("posts/filter"), AllowAnonymous]
+        public async Task<IActionResult> GetPostsByFilter(PostFilterRequest request)
+        {
+            List<Post> posts = await _postService.GetPostsByFilterAsync(request);
+
+            return Ok(ConvertPostsToResponseDto(posts));
+        }
+
         [HttpGet("posts/{authorId}"), AllowAnonymous]
         public async Task<IActionResult> GetPostsByAuthorId(int authorId)
         {
             List<Post> posts = await _postService.GetPostsByAuthorIdAsync(authorId);
 
-            return Ok(posts.Select(p => new PostResponse(
-                p.Id,
-                p.Title,
-                p.Description,
-                new UserResponse(
-                    p.Author.Id,
-                    p.Author.FirstName,
-                    p.Author.LastName
-                ),
-                new CategoryResponse(
-                    p.Category.Id,
-                    p.Category.Name,
-                    p.Category.Description
-                ),
-                p.PostHashtags.Select(ph => new HashtagResponse(
-                    ph.Hashtag.Id,
-                    ph.Hashtag.Name
-                )).ToList()
-            )));
+            return Ok(ConvertPostsToResponseDto(posts));
         }
 
         [HttpPost("posts"), Authorize]
@@ -75,7 +66,12 @@ namespace BlogAPI.PL.Controllers
             int userId = _httpContextAccessor.HttpContext.User.GetUserId();
             List<Post> posts = await _postService.GetPostsByAuthorIdAsync(userId);
 
-            return Ok(posts.Select(p => new PostResponse(
+            return Ok(ConvertPostsToResponseDto(posts));
+        }
+
+        private List<PostResponse> ConvertPostsToResponseDto(List<Post> posts)
+        {
+            return posts.Select(p => new PostResponse(
                 p.Id,
                 p.Title,
                 p.Description,
@@ -93,7 +89,7 @@ namespace BlogAPI.PL.Controllers
                     ph.Hashtag.Id,
                     ph.Hashtag.Name
                 )).ToList()
-            )));
+            )).ToList();
         }
     }
 }

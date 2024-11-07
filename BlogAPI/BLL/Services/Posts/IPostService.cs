@@ -8,5 +8,6 @@ namespace BlogAPI.BLL.Services.Posts
         Task AddPostAsync(CreatePostRequest request, int authorId);
         Task UpdatePostAsync(UpdatePostRequest request, int currentUserId);
         Task<List<Post>> GetPostsByAuthorIdAsync(int authorId);
+        Task<List<Post>> GetPostsByFilterAsync(PostFilterRequest request);
     }
 }

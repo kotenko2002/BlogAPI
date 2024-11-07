@@ -13,7 +13,7 @@ namespace BlogAPI.DAL.Repositories.Comments
 
         public async Task<List<Comment>> GetcommentByPostIdAsync(int postId)
         {
-            return await Sourse
+            return await Source
                 .Include(c => c.Replies)
                 .Where(c => c.PostId == postId && !c.ParentCommentId.HasValue)
                 .ToListAsync();
