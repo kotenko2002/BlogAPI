@@ -2,6 +2,7 @@
 using BlogAPI.BLL;
 using BlogAPI.DAL;
 using BlogAPI.PL;
+using Microsoft.Extensions.FileProviders;
 
 namespace BlogAPI
 {
@@ -31,6 +32,12 @@ namespace BlogAPI
             app.UseCors("AllowSpecificOrigin");
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "UploadedFiles")),
+                RequestPath = "/uploads"
+            });
 
             app.MapControllers();
 

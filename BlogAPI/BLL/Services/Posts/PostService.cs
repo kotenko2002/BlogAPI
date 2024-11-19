@@ -1,4 +1,5 @@
-﻿using BlogAPI.DAL.Entities.Posts;
+﻿using BlogAPI.BLL.Services.FileStorage;
+using BlogAPI.DAL.Entities.Posts;
 using BlogAPI.DAL.Entities.PostsHashtags;
 using BlogAPI.DAL.Uow;
 using BlogAPI.PL.Models.Posts;
@@ -8,18 +9,23 @@ namespace BlogAPI.BLL.Services.Posts
     public class PostService : IPostService
     {
         private readonly IUnitOfWork _uow;
+        private readonly IFileStorage _fileStorage;
 
-        public PostService(IUnitOfWork uow)
+        public PostService(IUnitOfWork uow, IFileStorage fileStorage)
         {
             _uow = uow;
+            _fileStorage = fileStorage;
         }
 
         public async Task AddPostAsync(CreatePostRequest request, int authorId)
         {
+            string fileName = await _fileStorage.AddFileAsync(request.Photo);
+
             var newPost = new Post()
             {
                 Title = request.Title,
                 Description = request.Description,
+                PhotoFileName = fileName,
                 AuthorId = authorId,
                 CategoryId = request.CategoryId
             };

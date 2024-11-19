@@ -32,6 +32,9 @@ namespace BlogAPI.DAL.Common
 
             modelBuilder.Entity<Post>(builder =>
             {
+                builder.Property(u => u.Title).IsRequired();
+                builder.Property(u => u.Description).IsRequired();
+                builder.Property(u => u.PhotoFileName).IsRequired();
                 builder.Property(u => u.CreatedAt).IsRequired();
 
                 builder

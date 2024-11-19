@@ -1,6 +1,7 @@
 ﻿using BlogAPI.BLL.Services.Auth;
 using BlogAPI.BLL.Services.Categories;
 using BlogAPI.BLL.Services.Comments;
+using BlogAPI.BLL.Services.FileStorage;
 using BlogAPI.BLL.Services.Hashtags;
 using BlogAPI.BLL.Services.Posts;
 
@@ -12,6 +13,7 @@ namespace BlogAPI.BLL
         {
             return services
                 .AddAuthService(configuration)
+                .AddScoped<IFileStorage, FileStorage>()
                 .AddScoped<IPostService, PostService>()
                 .AddScoped<ICategoryService, CategoryService>()
                 .AddScoped<IHashtagService, HashtagService>()

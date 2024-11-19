@@ -43,7 +43,7 @@ namespace BlogAPI.PL.Controllers
         }
 
         [HttpPost("posts"), Authorize]
-        public async Task<IActionResult> CreatePost(CreatePostRequest request)
+        public async Task<IActionResult> CreatePost([FromForm] CreatePostRequest request)
         {
             //TODO: add photos support
             int userId = _httpContextAccessor.HttpContext.User.GetUserId();
@@ -85,6 +85,7 @@ namespace BlogAPI.PL.Controllers
                 p.Id,
                 p.Title,
                 p.Description,
+                $"{Request.Scheme}://{Request.Host}/uploads/{p.PhotoFileName}",
                 new UserResponse(
                     p.Author.Id,
                     p.Author.FirstName,

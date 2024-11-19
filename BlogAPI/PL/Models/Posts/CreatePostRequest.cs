@@ -10,6 +10,9 @@ namespace BlogAPI.PL.Models.Posts
         [Required(ErrorMessage = "Опис є обов'язковим")]
         public string Description { get; set; }
 
+        [Required(ErrorMessage = "Фото є обов'язковим")]
+        public IFormFile Photo { get; set; }
+        
         [Required(ErrorMessage = "Категорія є обов'язковою")]
         public int CategoryId { get; set; }
 

@@ -1,12 +1,11 @@
 ﻿using BlogAPI.DAL.Entities.Users;
+using BlogAPI.PL.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using BlogAPI.PL.Models.Auth;
+using System.Text;
 
 namespace BlogAPI.BLL.Services.Auth
 {
@@ -47,8 +46,6 @@ namespace BlogAPI.BLL.Services.Auth
                 string message = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new Exception(message);
             }
-
-            //await _userManager.AddToRoleAsync(user, descriptor.Role); // якщо треба будуть ролі
         }
 
         public async Task<string> LoginAsync(LoginRequest request)
@@ -69,9 +66,6 @@ namespace BlogAPI.BLL.Services.Auth
             authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             JwtSecurityToken accessToken = GenerateAccessToken(authClaims);
-            string refreshToken = GenerateRefreshToken();
-
-            await _userManager.UpdateAsync(user);
 
             return new JwtSecurityTokenHandler().WriteToken(accessToken);
         }
@@ -87,14 +81,6 @@ namespace BlogAPI.BLL.Services.Auth
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
-        }
-
-        private string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[64];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
         }
     }
 }

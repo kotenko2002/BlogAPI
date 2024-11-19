@@ -8,6 +8,7 @@ namespace BlogAPI.PL.Models.Posts
         int Id,
         string Title,
         string Description,
+        string PhotoUrl,
         UserResponse Author,
         CategoryResponse Category,
         List<HashtagResponse> Hashtags
