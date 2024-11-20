@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.PL.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("categories")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -16,7 +16,7 @@ namespace BlogAPI.PL.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet("categories"), AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetCategories()
         {
             List<Category> categories = await _categoryService.GetAllCategories();

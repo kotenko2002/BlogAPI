@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.PL.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("posts")]
     public class PostController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -26,7 +26,7 @@ namespace BlogAPI.PL.Controllers
         }
 
 
-        [HttpPost("posts/filter"), AllowAnonymous]
+        [HttpPost("filter"), AllowAnonymous]
         public async Task<IActionResult> GetPostsByFilter(PostFilterRequest request)
         {
             List<Post> posts = await _postService.GetPostsByFilterAsync(request);
@@ -34,7 +34,7 @@ namespace BlogAPI.PL.Controllers
             return Ok(ConvertPostsToResponseDto(posts));
         }
 
-        [HttpGet("posts/{authorId}"), AllowAnonymous]
+        [HttpGet("{authorId}"), AllowAnonymous]
         public async Task<IActionResult> GetPostsByAuthorId(int authorId)
         {
             List<Post> posts = await _postService.GetPostsByAuthorIdAsync(authorId);
@@ -42,28 +42,25 @@ namespace BlogAPI.PL.Controllers
             return Ok(ConvertPostsToResponseDto(posts));
         }
 
-        [HttpPost("posts"), Authorize]
+        [HttpPost, Authorize]
         public async Task<IActionResult> CreatePost([FromForm] CreatePostRequest request)
         {
-            //TODO: add photos support
             int userId = _httpContextAccessor.HttpContext.User.GetUserId();
             await _postService.AddPostAsync(request, userId);
 
             return Ok($"Пост успішно створено");
         }
 
-        [HttpPut("posts"), Authorize]
-        public async Task<IActionResult> UpdatePost(UpdatePostRequest request)
+        [HttpPatch, Authorize]
+        public async Task<IActionResult> UpdatePost([FromForm] UpdatePostRequest request)
         {
-            //TODO: reimplement
-
-            //int userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            //await _postService.UpdatePostAsync(request, userId);
+            int userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            await _postService.UpdatePostAsync(request, userId);
 
             return Ok($"Пост успішно оновлено");
         }
 
-        [HttpGet("posts/mine"), Authorize]
+        [HttpGet("mine"), Authorize]
         public async Task<IActionResult> GetMyPosts()
         {
             int userId = _httpContextAccessor.HttpContext.User.GetUserId();
@@ -72,10 +69,12 @@ namespace BlogAPI.PL.Controllers
             return Ok(ConvertPostsToResponseDto(posts));
         }
 
-        [HttpDelete("posts/{postId}"), Authorize]
+        [HttpDelete("{postId}"), Authorize]
         public async Task<IActionResult> DeletePost(int postId)
         {
-            // TODO: implement
+            int userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            await _postService.DeletePostAsync(postId, userId);
+
             return Ok("Пост успішно видалено");
         }
 

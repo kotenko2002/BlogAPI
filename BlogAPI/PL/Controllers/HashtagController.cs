@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.PL.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("hashtags")]
     public class HashtagController : ControllerBase
     {
         private readonly IHashtagService _hashtagService;
@@ -16,7 +16,7 @@ namespace BlogAPI.PL.Controllers
             _hashtagService = hashtagService;
         }
 
-        [HttpGet("hashtags"), AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetHashtags()
         {
             List<Hashtag> hashtags = await _hashtagService.GetAllHashtags();

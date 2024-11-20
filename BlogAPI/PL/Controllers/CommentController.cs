@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace BlogAPI.PL.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("comments")]
     public class CommentController: ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -23,7 +23,7 @@ namespace BlogAPI.PL.Controllers
 
         }
 
-        [HttpGet("comments/{postId}"), AllowAnonymous]
+        [HttpGet("{postId}"), AllowAnonymous]
         public async Task<IActionResult> GetCommentsByPostId(int postId)
         {
             List<Comment> comments = await _commentService.GetCommentsByPostIdAsync(postId);
@@ -52,7 +52,7 @@ namespace BlogAPI.PL.Controllers
             return Ok(response);
         }
 
-        [HttpPost("comments/{postId}"), Authorize]
+        [HttpPost("{postId}"), Authorize]
         public async Task<IActionResult> CreateComment(int postId, CreateCommentRequest request)
         {
             int userId = _httpContextAccessor.HttpContext.User.GetUserId();

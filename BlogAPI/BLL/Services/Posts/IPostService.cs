@@ -9,5 +9,6 @@ namespace BlogAPI.BLL.Services.Posts
         Task UpdatePostAsync(UpdatePostRequest request, int currentUserId);
         Task<List<Post>> GetPostsByAuthorIdAsync(int authorId);
         Task<List<Post>> GetPostsByFilterAsync(PostFilterRequest request);
+        Task DeletePostAsync(int postId, int userId);
     }
 }

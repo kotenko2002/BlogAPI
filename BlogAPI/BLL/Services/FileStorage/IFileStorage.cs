@@ -3,6 +3,6 @@
     public interface IFileStorage
     {
         Task<string> AddFileAsync(IFormFile file);
-        void DeleteFileAsync(string fileName);
+        Task DeleteFileAsync(string fileName);
     }
 }

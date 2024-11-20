@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.PL.Controllers
 {
-    [ApiController, Route("[controller]")]
+    [ApiController, Route("auth")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;

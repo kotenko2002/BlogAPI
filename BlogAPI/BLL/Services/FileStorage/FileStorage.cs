@@ -35,7 +35,7 @@
             return newFileName;
         }
 
-        public void DeleteFileAsync(string fileName)
+        public async Task DeleteFileAsync(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {

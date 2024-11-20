@@ -58,11 +58,33 @@ namespace BlogAPI.BLL.Services.Posts
                 throw new Exception($"Ви не маєте права на редагування поста, оскільки не є автором");
             }
 
-            post.Title = request.Title;
-            post.Description = request.Description;
-            post.CategoryId = request.CategoryId;
+            if(!string.IsNullOrEmpty(request.Title))
+            {
+                post.Title = request.Title;
+            }
 
-            await UpdatePostHashtagsAsync(post, request.HashtagIds);
+            if (!string.IsNullOrEmpty(request.Description))
+            {
+                post.Description = request.Description;
+            }
+
+            if(request.Photo != null)
+            {
+                await _fileStorage.DeleteFileAsync(post.PhotoFileName);
+
+                string newFilePhotoName = await _fileStorage.AddFileAsync(request.Photo);
+                post.PhotoFileName = newFilePhotoName;
+            }
+
+            if (request.CategoryId.HasValue)
+            {
+                post.CategoryId = request.CategoryId.Value;
+            }
+
+            if(request.HashtagIds != null && request.HashtagIds.Any())
+            {
+                await UpdatePostHashtagsAsync(post, request.HashtagIds);//rempl method
+            }
 
             post.UpdatedAt = DateTime.Now;
             await _uow.CompleteAsync();
@@ -77,10 +99,27 @@ namespace BlogAPI.BLL.Services.Posts
         {
             return await _uow.PostRepository.GetPostsByFilterAsync(request);
         }
+        public async Task DeletePostAsync(int postId, int userId)
+        {
+            Post post = await _uow.PostRepository.FindAsync(postId);
+            if (post == null)
+            {
+                throw new Exception($"Поста з ідентифікатором {postId} не існує");
+            }
+
+            if (post.AuthorId != userId)
+            {
+                throw new Exception($"Ви не маєте права на редагування поста, оскільки не є автором");
+            }
+
+            await _fileStorage.DeleteFileAsync(post.PhotoFileName);
+
+            await _uow.PostRepository.RemoveAsync(post);
+            await _uow.CompleteAsync();
+        }
 
         private async Task UpdatePostHashtagsAsync(Post post, List<int> hashtagIds)
         {
-            hashtagIds = hashtagIds ?? new List<int>();
             List<int> existingHashtagIds = post.PostHashtags.Select(ph => ph.HashtagId).ToList();
 
             List<PostHashtag> tagsToRemove = post.PostHashtags
