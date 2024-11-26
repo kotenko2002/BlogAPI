@@ -1,4 +1,7 @@
-﻿namespace BlogAPI.BLL.Services.FileStorage
+﻿using BlogAPI.PL.Common.Middlewares;
+using System.Net;
+
+namespace BlogAPI.BLL.Services.FileStorage
 {
     public class FileStorage : IFileStorage
     {
@@ -13,7 +16,7 @@
         {
             if (file == null || file.Length == 0)
             {
-                throw new Exception("Файл не завантажено.");
+                throw new BusinessException(HttpStatusCode.BadRequest, "Файл не завантажено.");
             }
 
             var uploadPath = Path.Combine(_environment.ContentRootPath, "UploadedFiles");
@@ -39,7 +42,7 @@
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
-                throw new Exception("Назва файлу не вказана.");
+                throw new BusinessException(HttpStatusCode.BadRequest, "Назва файлу не вказана.");
             }
 
             var uploadPath = Path.Combine(_environment.ContentRootPath, "UploadedFiles");
@@ -47,7 +50,7 @@
 
             if (!File.Exists(filePath))
             {
-                throw new Exception("Файл не знайдено.");
+                throw new BusinessException(HttpStatusCode.NotFound, "Файл не знайдено.");
             }
 
             try
@@ -56,7 +59,7 @@
             }
             catch (Exception ex)
             {
-                throw new Exception($"Помилка при видаленні файлу: {ex.Message}");
+                throw new BusinessException(HttpStatusCode.BadRequest, $"Помилка при видаленні файлу: {ex.Message}");
             }
         }
     }

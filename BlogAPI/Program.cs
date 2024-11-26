@@ -2,6 +2,7 @@
 using BlogAPI.BLL;
 using BlogAPI.DAL;
 using BlogAPI.PL;
+using BlogAPI.PL.Common.Middlewares;
 using Microsoft.Extensions.FileProviders;
 
 namespace BlogAPI
@@ -28,6 +29,7 @@ namespace BlogAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseCors("AllowSpecificOrigin");
             app.UseAuthentication();

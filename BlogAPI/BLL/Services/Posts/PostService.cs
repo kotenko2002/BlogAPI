@@ -2,7 +2,9 @@
 using BlogAPI.DAL.Entities.Posts;
 using BlogAPI.DAL.Entities.PostsHashtags;
 using BlogAPI.DAL.Uow;
+using BlogAPI.PL.Common.Middlewares;
 using BlogAPI.PL.Models.Posts;
+using System.Net;
 
 namespace BlogAPI.BLL.Services.Posts
 {
@@ -50,12 +52,12 @@ namespace BlogAPI.BLL.Services.Posts
             Post post = await _uow.PostRepository.FindAsync(request.Id);
             if(post == null)
             {
-                throw new Exception($"Поста з ідентифікатором {request.Id} не існує");
+                throw new BusinessException(HttpStatusCode.NotFound, $"Поста з ідентифікатором {request.Id} не існує");
             }
 
             if(post.AuthorId != currentUserId)
             {
-                throw new Exception($"Ви не маєте права на редагування поста, оскільки не є автором");
+                throw new BusinessException(HttpStatusCode.Forbidden, $"Ви не маєте права на редагування поста, оскільки не є автором");
             }
 
             if(!string.IsNullOrEmpty(request.Title))
@@ -104,12 +106,12 @@ namespace BlogAPI.BLL.Services.Posts
             Post post = await _uow.PostRepository.FindAsync(postId);
             if (post == null)
             {
-                throw new Exception($"Поста з ідентифікатором {postId} не існує");
+                throw new BusinessException(HttpStatusCode.NotFound, $"Поста з ідентифікатором {postId} не існує");
             }
 
             if (post.AuthorId != userId)
             {
-                throw new Exception($"Ви не маєте права на редагування поста, оскільки не є автором");
+                throw new BusinessException(HttpStatusCode.Forbidden, $"Ви не маєте права на редагування поста, оскільки не є автором");
             }
 
             await _fileStorage.DeleteFileAsync(post.PhotoFileName);

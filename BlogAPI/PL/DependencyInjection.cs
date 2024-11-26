@@ -20,8 +20,7 @@ namespace BlogAPI.PL
                 .AddHttpContextAccessor()
                 .AddEndpointsApiExplorer()
                 .AllowCORS()
-                .AddSwagger()
-                .AddProblemDetails();
+                .AddSwagger();
         }
 
         public static IServiceCollection AddAuthScheme(this IServiceCollection services, IConfiguration configuration)

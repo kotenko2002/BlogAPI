@@ -1,9 +1,11 @@
 ﻿using BlogAPI.DAL.Entities.Users;
+using BlogAPI.PL.Common.Middlewares;
 using BlogAPI.PL.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -27,7 +29,7 @@ namespace BlogAPI.BLL.Services.Auth
             User existsUser = await _userManager.FindByNameAsync(request.Username);
             if (existsUser != null)
             {
-                throw new Exception($"Запис з користувацьмис ім'ям {request.Username} вже існує!");
+                throw new BusinessException(HttpStatusCode.BadRequest, $"Запис з користувацьмис ім'ям {request.Username} вже існує!");
             }
 
             var user = new User()
@@ -44,7 +46,7 @@ namespace BlogAPI.BLL.Services.Auth
             if (!result.Succeeded)
             {
                 string message = string.Join(", ", result.Errors.Select(e => e.Description));
-                throw new Exception(message);
+                throw new BusinessException(HttpStatusCode.BadRequest, message);
             }
         }
 
@@ -53,7 +55,7 @@ namespace BlogAPI.BLL.Services.Auth
             User user = await _userManager.FindByNameAsync(request.Username);
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
             {
-                throw new Exception("Неправильне користувацьке ім'я або пароль");
+                throw new BusinessException(HttpStatusCode.BadRequest, "Неправильне користувацьке ім'я або пароль");
             }
 
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
